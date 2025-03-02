@@ -110,60 +110,58 @@
 	
 
 	(function init() {
+		// Function to calculate remaining time
 		function getTimeRemaining(endtime) {
-		  var t = Date.parse(endtime) - Date.parse(new Date());
-		  var seconds = Math.floor((t / 1000) % 60);
-		  var minutes = Math.floor((t / 1000 / 60) % 60);
-		  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-		  var days = Math.floor(t / (1000 * 60 * 60 * 24));
-		  return {
-			'total': t,
-			'days': days,
-			'hours': hours,
-			'minutes': minutes,
-			'seconds': seconds
-		  };
+			var t = Date.parse(endtime) - Date.parse(new Date());
+			var seconds = Math.floor((t / 1000) % 60);
+			var minutes = Math.floor((t / 1000 / 60) % 60);
+			var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+			var days = Math.floor(t / (1000 * 60 * 60 * 24));
+			return { 'total': t, 'days': days, 'hours': hours, 'minutes': minutes, 'seconds': seconds };
 		}
 		
-		function initializeClock(endtime){
-		var timeinterval = setInterval(function(){
-		  var t = getTimeRemaining(endtime);
-		  document.querySelector(".days > .value").innerText=t.days;
-		  document.querySelector(".hours > .value").innerText=t.hours;
-		  document.querySelector(".minutes > .value").innerText=t.minutes;
-		  document.querySelector(".seconds > .value").innerText=t.seconds;
-		  if(t.total<=0){
-			clearInterval(timeinterval);
-		  }
-		},1000);
-	  }
-	  initializeClock(((new Date()).getFullYear()+1) + "/1/1")
-	})()
-
+		// Function to initialize the countdown clock
+		function initializeClock(endtime) {
+			var timeinterval = setInterval(function () {
+				var t = getTimeRemaining(endtime);
+				document.querySelector(".days > .value").innerText = t.days;
+				document.querySelector(".hours > .value").innerText = t.hours;
+				document.querySelector(".minutes > .value").innerText = t.minutes;
+				document.querySelector(".seconds > .value").innerText = t.seconds;
+				if (t.total <= 0) {
+					clearInterval(timeinterval);
+				}
+			}, 1000);
+		}
+		
+		// Start countdown to next New Year
+		initializeClock(((new Date()).getFullYear() + 1) + "/1/1");
+	
+	})();
+	
 	var context;
 	var $window = $(window);
-
-	// run this right away to set context
+	
+	// Set the initial context based on screen width
 	if ($window.width() <= 768) {
 		context = 'small';
-	} else if (768 < $window.width() < 970) {
+	} else if ($window.width() > 768 && $window.width() < 970) { // ✅ Fixed comparison
 		context = 'medium';
 	} else {
 		context = 'large';
 	}
-
-	// refresh the page only if you're crossing into a context
-	// that isn't already set
-	$(window).resize(function() {
-		if(($window.width() <= 768) && (context != 'small')) {
-			//refresh the page
+	
+	// Refresh the page when resizing into a different screen size category
+	$(window).resize(function () {
+		if ($window.width() <= 768 && context !== 'small') {
 			location.reload();
-		} else if ((768 < $window.width()  < 970) && (context != 'medium')) {
+		} else if ($window.width() > 768 && $window.width() < 970 && context !== 'medium') { // ✅ Fixed
 			location.reload();
-		} else if (context != 'large') {
+		} else if ($window.width() >= 970 && context !== 'large') {
 			location.reload();
 		}
 	});
+	
 
 	$("#modal_trigger").leanModal({
 		top: 100,
